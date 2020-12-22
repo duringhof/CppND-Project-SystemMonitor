@@ -1,4 +1,12 @@
-# CppND-System-Monitor
+# CppND-Project-SystemMonitor
+
+WORK IN PROGRESS...
+
+In this repository I am working on my submission to the second project of the Udacity C++ Nanodegree. Once the submission is done, I will update this readme with some description.
+
+The text below, comes straight from the starter code repository:
+
+# CppND-System-Monitor Starter Code
 
 Starter code for System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
 
