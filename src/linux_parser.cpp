@@ -110,7 +110,8 @@ long LinuxParser::Jiffies() {
   vector<string> values = CpuUtilization();
   vector<long> valueslong(10, 0);
   long total = 0;
-  for (int i : {0, 1, 2, 3, 4, 5, 6, 7}) { // All non-guest values
+  vector<CPUStates> all = {kUser_, kNice_, kSystem_, kIdle_, kIOwait_, kIRQ_, kSoftIRQ_, kSteal_};
+  for (int i : all) { // All non-guest values
     valueslong[i] = stol(values[i]);
     total += valueslong[i];
   };
@@ -126,7 +127,8 @@ long LinuxParser::ActiveJiffies() {
   vector<string> values = CpuUtilization();
   vector<long> valueslong(10, 0);
   long total = 0;
-  for (int i : {0, 1, 2, 5, 6, 7}) { // Active (non Idle) values
+  vector<CPUStates> active = {kUser_, kNice_, kSystem_, kIRQ_, kSoftIRQ_, kSteal_};
+  for (int i : active) { // Active (non Idle) values
     valueslong[i] = stol(values[i]);
     total += valueslong[i];
   };
@@ -138,7 +140,8 @@ long LinuxParser::IdleJiffies() {
   vector<string> values = CpuUtilization();
   vector<long> valueslong(10, 0);
   long total = 0;
-  for (int i : {3, 4}) { // Non-Active (Idle) values
+  vector<CPUStates> idle = {kIdle_, kIOwait_};
+  for (int i : idle) { // Non-Active (Idle) values
     valueslong[i] = stol(values[i]);
     total += valueslong[i];
   };
