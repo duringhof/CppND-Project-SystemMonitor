@@ -26,6 +26,7 @@ vector<Process>& System::Processes() {
     Process process(pid);
     processes_.push_back(process);
   }
+  std::sort(processes_.rbegin(),processes_.rend());
   return processes_;
 }
 
