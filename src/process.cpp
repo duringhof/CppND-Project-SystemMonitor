@@ -41,4 +41,4 @@ string Process::User() { return LinuxParser::User(Pid()); }
 long int Process::UpTime() { return LinuxParser::UpTime(Pid()); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process const& a) const { return CpuUtilization() < a.CpuUtilization(); }
+bool Process::operator<(Process const& a) const { return stol(Ram()) < stol(a.Ram()); }
