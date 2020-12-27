@@ -2,7 +2,9 @@
 
 WORK IN PROGRESS...
 
-In this repository I am working on my submission to the second project of the Udacity C++ Nanodegree. Once the submission is done, I will update this readme with some description.
+In this repository I am working on my submission to the second project of the Udacity C++ Nanodegree. Once the submission is done and approved, I will update this readme with some description.
+
+SO WHEN YOU CAN STILL READ THIS, CONSIDER THE PROJECT UNFINISHED AND THE CODE WRONG AND/OR INCOMPLETE !!!
 
 The text below, comes straight from the starter code repository:
 
