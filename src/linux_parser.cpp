@@ -119,44 +119,49 @@ long LinuxParser::Jiffies() {
 }
 
 // TODO: Read and return the number of active jiffies for a PID
-long LinuxParser::ActiveJiffies(int pid) { return (pid*2); }
+long LinuxParser::ActiveJiffies(int pid) {
+  string line;
+  string key;
+  vector<string> values(17,"0");
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    linestream >> values[0] >> values[1] >> values[2] >> values[3] >>
+        values[4] >> values[5] >> values[6] >> values[7] >> values[8] >>
+        values[9] >> values[10] >> values[11] >> values[12] >> values[13] >>
+        values[14] >> values[15] >> values[16];
+  }
+  return stol(values[13] + values[14] + values[15] + values[16]);
+}
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() {
-  vector<string> values = CpuUtilization();
-  vector<long> valueslong(10, 0);
-  long total = 0;
-  vector<CPUStates> active = {kUser_, kNice_, kSystem_, kIRQ_, kSoftIRQ_, kSteal_};
-  for (int i : active) { // Active (non Idle) values
-    valueslong[i] = stol(values[i]);
-    total += valueslong[i];
-  };
-  return total;
+  vector<string> jiffies = CpuUtilization();
+  return stol(jiffies[CPUStates::kUser_]) + stol(jiffies[CPUStates::kNice_]) +
+         stol(jiffies[CPUStates::kSystem_]) + stol(jiffies[CPUStates::kIRQ_]) +
+         stol(jiffies[CPUStates::kSoftIRQ_]) + stol(jiffies[CPUStates::kSteal_]);
 }
 
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() {
-  vector<string> values = CpuUtilization();
-  vector<long> valueslong(10, 0);
-  long total = 0;
-  vector<CPUStates> idle = {kIdle_, kIOwait_};
-  for (int i : idle) { // Non-Active (Idle) values
-    valueslong[i] = stol(values[i]);
-    total += valueslong[i];
-  };
-  return total;
+  vector<string> jiffies = CpuUtilization();
+  return stol(jiffies[CPUStates::kIdle_]) + stol(jiffies[CPUStates::kIOwait_]);
 }
 
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() {
-  string line;
+  string line, value;
   string key;
-  vector<string> values(10,"0");
+  vector<string> values;
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
-    linestream >> key >> values[0] >> values[1] >> values[2] >> values[3] >> values[4] >> values[5] >> values[6] >> values[7] >> values[8] >> values[9];
+    linestream >> key;
+    while (linestream >> value) {
+      values.push_back(value);
+    };
   }
   return values;
 }
@@ -243,4 +248,16 @@ string LinuxParser::User(int pid) {
   return "unknown"; }
 
 // TODO: Read and return the uptime of a process
-long LinuxParser::UpTime(int pid) { return (pid*2); }
+long LinuxParser::UpTime(int pid) {
+  string line, value;
+  vector<string> values;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    while (linestream >> value) {
+      values.push_back(value);
+    };
+  }
+  return LinuxParser::UpTime() - (stol(values[21]) / 100);
+}
